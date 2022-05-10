@@ -30,7 +30,7 @@ __C.IR.OA               = edict()
 __C.IR.OA.RIGHT         = 26 
 __C.IR.OA.LEFT          = 13
 
-# Tracer Sensorst
+# Tracer Sensors
 __C.IR.TRACER           = edict()
 __C.IR.TRACER.RIGHT     = 6
 __C.IR.TRACER.LEFT      = 5
