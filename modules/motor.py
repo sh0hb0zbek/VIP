@@ -34,7 +34,8 @@ class Motor():
             self.isRunning = True
             self.start.start()
         
-        if speed > 100: speed = 100
+        if speed > 100.0: speed = 100.0
+        elif speed < 0.0: speed = 0.0
         if direction == 'f':        # forward
             self.speed_left = self.speed_right = speed
             self.wheel('f')
@@ -42,15 +43,15 @@ class Motor():
             self.speed_left = self.speed_right = -speed
             self.wheel('b')
         elif direction == 'r':      # right
-            if self.speed_left > 50: self.speed_left = 50
+            if self.speed_left > 50.0: self.speed_left = 50.0
             self.speed_left = self.speed_left + speed if (self.speed_left+speed) < 100.0 else 100
-            self.speed_right = self.speed_left - speed if (self.speed_left-speed) >= 0.0 else 0
+            self.speed_right = self.speed_left - speed if (self.speed_left-speed) >= 0.0 else 0.0
         elif direction == 'l':      # left
-            if self.speed_right > 50: self.speed_right = 50
+            if self.speed_right > 50.0: self.speed_right = 50.0
             self.speed_right = self.speed_right + speed if (self.speed_right+speed) < 100.0 else 100
-            self.speed_left = self.speed_right - speed if (self.speed_right-speed) >= 0.0 else 0
+            self.speed_left = self.speed_right - speed if (self.speed_right-speed) >= 0.0 else 0.0
         else:
-            self.speed_left = self.speed_right = 0
+            self.speed_left = self.speed_right = 0.0
             if direction == 'q':
                 # stop driving
                 self.isRunning = False
