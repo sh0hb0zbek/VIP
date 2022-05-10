@@ -56,7 +56,6 @@ class Motor():
                 self.isRunning = False
                 self.start.join()
                 
-    
     def go(self):
         while self.isRunning:
             self.pwmLeft.ChangeDutyCycle(abs(self.speed_left))
