@@ -1,65 +1,43 @@
-  import RPi.GPIO as GPIO
-from config.cfg.DIR import *
-import sys
-from threading import Thread
-GPIO.setmode(GPIO.BCM)
+from easydict import EasyDict as edict
+
+__C                     = edict()
+
+# config can be used by: from config import cfg
+cfg                     = __C
 
 
-class Motor:
-    def __init__(self, EnA, EnB, In1, In2, In3, In4, speed=0):
-        self.EnLeft = EnA
-        self.EnRight = EnB
-        self.InLeft1 = In1
-        self.InLeft2 = In2
-        self.InRight1 = In3
-        self.InRight2 = In4
-        GPIO.setup(self.EnLeft, GPIO.OUT)
-        GPIO.setup(self.EnRight, GPIO.OUT)
-        GPIO.setup(self.InLeft1, GPIO.OUT)
-        GPIO.setup(self.InLeft2, GPIO.OUT)
-        GPIO.setup(self.InRight1, GPIO.OUT)
-        GPIO.setup(self.InRight2, GPIO.OUT)
-        
-        self.pwmLeft = GPIO.PWM(self.EnLeft, 100)
-        self.pwmLeft.start(0)
-        self.pwmRight = GPIO.PWM(self.EnRight, 100)
-        self.pwmRight.start(0)
-
-        self.speed = speed
-
-        self.direction = {
-            FORWARD:  [GPIO.HIGH, GPIO.LOW,  GPIO.HIGH, GPIO.LOW ],
-            BACKWARD: [GPIO.LOW,  GPIO.HIGH, GPIO.LOW,  GPIO.HIGH],
-            LEFT:     [GPIO.LOW,  GPIO.HIGH, GPIO.HIGH, GPIO.LOW ],
-            RIGHT:    [GPIO.HIGH, GPIO.LOW,  GPIO.LOW,  GPIO.HIGH],
-            STOP:     [GPIO.LOW,  GPIO.LOW,  GPIO.LOW,  GPIO.LOW ]
-        }
-
-        self.isRunning = False
-        self.start = Thread(target=self.go)
+# Ultrasonic distance sensor's options
+__C.ULTRA               = edict()
+__C.ULTRA.TRIG          = 24
+__C.ULTRA.ECHO          = 25
 
 
-    def move(self, direction=FORWARD, speed=None, timeout=0):
-        if speed is not None:
-            self.speed = speed
-        self.change_dir(direction)
+# Motors' options
+__C.MOTOR               = edict()
+__C.MOTOR.IN1           = 4
+__C.MOTOR.IN2           = 17
+__C.MOTOR.IN3           = 27
+__C.MOTOR.IN4           = 22
+__C.MOTOR.ENA           = 18
+__C.MOTOR.ENB           = 23
 
+# car's movement directions
+__C.DIR                 = edict()
+__C.DIR.FORWARD         = 0
+__C.DIR.BACKWAR         = 1
+__C.DIR.LEFT            = 2
+__C.DIR.RIGHT           = 3
+__C.DIR.STOP            = 4
 
-    def change_dir(self, direction):
-        direction = self.direction.get(direction)
-        if direction is None:
-            print('[ERROR] Unknown direction is given!')
-            sys.exit(1)
-        self.isRunning = False if direction == STOP else True
-        # left side
-        GPIO.output(self.InLeft1, direction[0])
-        GPIO.output(self.InLeft2, direction[1])
-        # right side
-        GPIO.output(self.InRight1, direction[2])
-        GPIO.output(self.InRight2, direction[3])
+# InfraRed sensors' option
+__C.IR                  = edict()
 
+# OA - Object Avoidance
+__C.IR.OA               = edict()
+__C.IR.OA.RIGHT         = 26 
+__C.IR.OA.LEFT          = 13
 
-    def go(self):
-        while self.isRunning:
-            self.pwmLeft.ChangeDutyCycle(abs(self.speed))
-            self.pwmRight.ChangeDutyCycle(abs(self.speed))
+# Tracer Sensors
+__C.IR.TRACER           = edict()
+__C.IR.TRACER.RIGHT     = 6
+__C.IR.TRACER.LEFT      = 5
